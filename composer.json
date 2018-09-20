@@ -46,10 +46,12 @@
     },
     "scripts": {
         "post-install-cmd": [
-            "WordpressProject\\composer\\ScriptHandler::CreateRequiredFiles"
+            "WordpressProject\\composer\\ScriptHandler::CreateRequiredFiles",
+            "WordpressProject\\composer\\ScriptHandler::CreateSymlinks"
         ],
         "post-update-cmd": [
-            "WordpressProject\\composer\\ScriptHandler::CreateRequiredFiles"
+            "WordpressProject\\composer\\ScriptHandler::CreateRequiredFiles",
+            "WordpressProject\\composer\\ScriptHandler::CreateSymlinks"
         ]
     }
 }
