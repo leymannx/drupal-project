@@ -112,6 +112,13 @@ class ScriptHandler {
 			$event->getIO()
 			      ->write( "Symlinked $composerRoot/wp-config/wp-config.php to $webRoot/wp-config.php" );
 		}
+
+		if ( $fs->exists( $composerRoot . '/uploads' ) && ! $fs->exists( $webRoot . '/wp-content/uploads' ) ) {
+
+			$fs->symlink( $composerRoot . '/uploads', $webRoot . '/wp-content/uploads' );
+			$event->getIO()
+			      ->write( "Symlinked $composerRoot/uploads to $webRoot/wp-content/uploads" );
+		}
 	}
 
 }
