@@ -47,9 +47,6 @@ class ScriptHandler {
 
 	public static function createSymlinks( Event $event ) {
 
-		$fs     = new Filesystem();
-		$finder = new Finder();
-
 		$wordpressFinder = new WordpressFinder();
 		$wordpressFinder->locateRoot( getcwd() );
 
@@ -72,8 +69,12 @@ class ScriptHandler {
 			$custom_muPluginsDir => 'mu-plugins',
 		];
 
+		$fs = new Filesystem();
+
 		foreach ( $dirsToCheck as $dir => $type ) {
 			if ( $fs->exists( $dir ) ) {
+
+				$finder = new Finder();
 
 				foreach (
 					$finder->in( $dir )
