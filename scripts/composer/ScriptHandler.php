@@ -76,6 +76,7 @@ class ScriptHandler {
 
         $finder = new Finder();
 
+        // Symlink wp-custom and wp-vendor directories into web/wp-content.
         foreach ($finder->in($dir)->depth('== 0')->directories()
           as $path) {
 
@@ -90,6 +91,7 @@ class ScriptHandler {
           }
         }
 
+        // Symlink wp-custom and wp-vendor single PHP files into web/wp-content.
         foreach ($finder->in($dir)->depth('== 0')->files()->name('*.php')
           as $path) {
 
@@ -106,6 +108,7 @@ class ScriptHandler {
       }
     }
 
+    // Symlink wp-config/wp-config.php into webroot.
     if ($fs->exists($composerRoot . '/wp-config/wp-config.php')
       && !$fs->exists($webRoot . '/wp-config.php')) {
 
@@ -114,6 +117,7 @@ class ScriptHandler {
         ->write("Symlinked $composerRoot/wp-config/wp-config.php to $webRoot/wp-config.php");
     }
 
+    // Symlink uploads folder into web/wp-content/uploads.
     if ($fs->exists($composerRoot . '/uploads')
       && !$fs->exists($webRoot . '/wp-content/uploads')) {
 
@@ -149,7 +153,7 @@ class ScriptHandler {
 
         $finder = new Finder();
 
-        // Symlink wp-vendor and wp-custom directories into WordPress.
+        // Remove broken web/wp-content folder symlinks.
         foreach ($finder->in($dir)->depth('== 0')->directories()
           as $path) {
 
@@ -157,8 +161,7 @@ class ScriptHandler {
           // $event->getIO()->write("$path");
         }
 
-        // Symlink single PHP files, too. When not inside one of the folders
-        // from above.
+        // Remove broken web/wp-content single PHP file symlinks.
         foreach ($finder->in($dir)->depth('== 0')->files()->name('*.php')
           as $path) {
 
