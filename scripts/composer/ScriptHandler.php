@@ -13,113 +13,160 @@ use Symfony\Component\Finder\Finder;
 
 class ScriptHandler {
 
-	public static function createRequiredFiles( Event $event ) {
+  public static function createRequiredFiles(Event $event) {
 
-		$fs              = new Filesystem();
-		$wordpressFinder = new WordpressFinder();
-		$wordpressFinder->locateRoot( getcwd() );
+    $fs = new Filesystem();
+    $wordpressFinder = new WordpressFinder();
+    $wordpressFinder->locateRoot(getcwd());
 
-		$composerRoot = $wordpressFinder->getComposerRoot();
+    $composerRoot = $wordpressFinder->getComposerRoot();
 
-		$dirs = [
-			'mu-plugins',
-			'plugins',
-			'themes',
-		];
+    $dirs = [
+      'mu-plugins',
+      'plugins',
+      'themes',
+    ];
 
-		// Create folders for custom plugins and themes.
-		foreach ( $dirs as $dir ) {
-			if ( ! $fs->exists( $composerRoot . '/wp-custom/' . $dir ) ) {
-				$fs->mkdir( $composerRoot . '/wp-custom/' . $dir );
-				$fs->touch( $composerRoot . '/wp-custom/' . $dir . '/.gitkeep' );
-				$event->getIO()
-				      ->write( "Created " . $composerRoot . "/" . $dir . " directory" );
-			}
-		}
+    // Create folders for custom plugins and themes.
+    foreach ($dirs as $dir) {
+      if (!$fs->exists($composerRoot . '/wp-custom/' . $dir)) {
+        $fs->mkdir($composerRoot . '/wp-custom/' . $dir);
+        $fs->touch($composerRoot . '/wp-custom/' . $dir . '/.gitkeep');
+        $event->getIO()
+          ->write("Created " . $composerRoot . "/" . $dir . " directory");
+      }
+    }
 
-		// Create the upload directory with chmod 0777.
-		if ( ! $fs->exists( $composerRoot . '/uploads' ) ) {
-			$fs->mkdir( $composerRoot . '/uploads', 0777 );
-			$event->getIO()
-			      ->write( "Created " . $composerRoot . "/uploads directory with chmod 0777" );
-		}
-	}
+    // Create the upload directory with chmod 0777.
+    if (!$fs->exists($composerRoot . '/uploads')) {
+      $fs->mkdir($composerRoot . '/uploads', 0777);
+      $event->getIO()
+        ->write("Created " . $composerRoot . "/uploads directory with chmod 0777");
+    }
+  }
 
-	public static function createSymlinks( Event $event ) {
+  public static function createSymlinks(Event $event) {
 
-		$wordpressFinder = new WordpressFinder();
-		$wordpressFinder->locateRoot( getcwd() );
+    $wordpressFinder = new WordpressFinder();
+    $wordpressFinder->locateRoot(getcwd());
 
-		$webRoot      = $wordpressFinder->getWebRoot();
-		$composerRoot = $wordpressFinder->getComposerRoot();
-		$pluginsDir   = $wordpressFinder->getPluginsDir();
-		$themesDir    = $wordpressFinder->getThemesDir();
-		$muPluginsDir = $wordpressFinder->getMuPluginsDir();
+    $webRoot = $wordpressFinder->getWebRoot();
+    $composerRoot = $wordpressFinder->getComposerRoot();
+    $pluginsDir = $wordpressFinder->getPluginsDir();
+    $themesDir = $wordpressFinder->getThemesDir();
+    $muPluginsDir = $wordpressFinder->getMuPluginsDir();
 
-		$custom_pluginsDir   = $composerRoot . '/wp-custom/plugins';
-		$custom_themesDir    = $composerRoot . '/wp-custom/themes';
-		$custom_muPluginsDir = $composerRoot . '/wp-custom/mu-plugins';
+    $custom_pluginsDir = $composerRoot . '/wp-custom/plugins';
+    $custom_themesDir = $composerRoot . '/wp-custom/themes';
+    $custom_muPluginsDir = $composerRoot . '/wp-custom/mu-plugins';
 
-		$dirsToCheck = [
-			$pluginsDir          => 'plugins',
-			$custom_pluginsDir   => 'plugins',
-			$themesDir           => 'themes',
-			$custom_themesDir    => 'themes',
-			$muPluginsDir        => 'mu-plugins',
-			$custom_muPluginsDir => 'mu-plugins',
-		];
+    $dirsToCheck = [
+      $pluginsDir          => 'plugins',
+      $custom_pluginsDir   => 'plugins',
+      $themesDir           => 'themes',
+      $custom_themesDir    => 'themes',
+      $muPluginsDir        => 'mu-plugins',
+      $custom_muPluginsDir => 'mu-plugins',
+    ];
 
-		$fs = new Filesystem();
+    $fs = new Filesystem();
 
-		foreach ( $dirsToCheck as $dir => $type ) {
-			if ( $fs->exists( $dir ) ) {
+    foreach ($dirsToCheck as $dir => $type) {
+      if ($fs->exists($dir)) {
 
-				$finder = new Finder();
+        $finder = new Finder();
 
-				foreach (
-					$finder->in( $dir )
-					       ->depth( '== 0' )
-					       ->directories() as $path
-				) {
-					$name = basename( $path );
-					if ( $fs->exists( $dir . '/' . $name ) && ! $fs->exists( $webRoot . '/wp-content/' . $type . '/' . $name ) ) {
+        foreach ($finder->in($dir)->depth('== 0')->directories()
+          as $path) {
 
-						$fs->symlink( $path, $webRoot . '/wp-content/' . $type . '/' . $name );
-						$event->getIO()
-						      ->write( "Symlinked $path to $webRoot/wp-content/$type/$name" );
-					}
-				}
+          $name = basename($path);
 
-				foreach (
-					$finder->in( $dir )
-					       ->depth( '== 0' )
-					       ->files()
-					       ->name( '*.php' ) as $path
-				) {
-					$name = basename( $path );
-					if ( $fs->exists( $dir . '/' . $name ) && ! $fs->exists( $webRoot . '/wp-content/' . $type . '/' . $name ) ) {
+          if ($fs->exists($dir . '/' . $name)
+            && !$fs->exists($webRoot . '/wp-content/' . $type . '/' . $name)) {
 
-						$fs->symlink( $path, $webRoot . '/wp-content/' . $type . '/' . $name );
-						$event->getIO()
-						      ->write( "Symlinked $path to $webRoot/wp-content/$type/$name" );
-					}
-				}
-			}
-		}
+            $fs->symlink($path, $webRoot . '/wp-content/' . $type . '/' . $name);
+            $event->getIO()
+              ->write("Symlinked $path to $webRoot/wp-content/$type/$name");
+          }
+        }
 
-		if ( $fs->exists( $composerRoot . '/wp-config/wp-config.php' ) && ! $fs->exists( $webRoot . '/wp-config.php' ) ) {
+        foreach ($finder->in($dir)->depth('== 0')->files()->name('*.php')
+          as $path) {
 
-			$fs->symlink( $composerRoot . '/wp-config/wp-config.php', $webRoot . '/wp-config.php' );
-			$event->getIO()
-			      ->write( "Symlinked $composerRoot/wp-config/wp-config.php to $webRoot/wp-config.php" );
-		}
+          $name = basename($path);
 
-		if ( $fs->exists( $composerRoot . '/uploads' ) && ! $fs->exists( $webRoot . '/wp-content/uploads' ) ) {
+          if ($fs->exists($dir . '/' . $name)
+            && !$fs->exists($webRoot . '/wp-content/' . $type . '/' . $name)) {
 
-			$fs->symlink( $composerRoot . '/uploads', $webRoot . '/wp-content/uploads' );
-			$event->getIO()
-			      ->write( "Symlinked $composerRoot/uploads to $webRoot/wp-content/uploads" );
-		}
-	}
+            $fs->symlink($path, $webRoot . '/wp-content/' . $type . '/' . $name);
+            $event->getIO()
+              ->write("Symlinked $path to $webRoot/wp-content/$type/$name");
+          }
+        }
+      }
+    }
+
+    if ($fs->exists($composerRoot . '/wp-config/wp-config.php')
+      && !$fs->exists($webRoot . '/wp-config.php')) {
+
+      $fs->symlink($composerRoot . '/wp-config/wp-config.php', $webRoot . '/wp-config.php');
+      $event->getIO()
+        ->write("Symlinked $composerRoot/wp-config/wp-config.php to $webRoot/wp-config.php");
+    }
+
+    if ($fs->exists($composerRoot . '/uploads')
+      && !$fs->exists($webRoot . '/wp-content/uploads')) {
+
+      $fs->symlink($composerRoot . '/uploads', $webRoot . '/wp-content/uploads');
+      $event->getIO()
+        ->write("Symlinked $composerRoot/uploads to $webRoot/wp-content/uploads");
+    }
+  }
+
+  public static function removeBrokenSymlinks(Event $event) {
+
+    $wordpressFinder = new WordpressFinder();
+    $wordpressFinder->locateRoot(getcwd());
+
+    $webRoot = $wordpressFinder->getWebRoot();
+
+    $dirsToCheck = [
+      $webRoot . '/wp-content/plugins',
+      $webRoot . '/wp-content/themes',
+      $webRoot . '/wp-content/mu-plugins',
+    ];
+
+    $fs = new Filesystem();
+
+    // $event->getIO()->write(get_class_methods($fs));
+    $a = new \ReflectionClass($fs);
+    $event->getIO()->write($a->getFileName());
+    $b = new \ReflectionClass($wordpressFinder);
+    $event->getIO()->write($b->getFileName());
+
+    foreach ($dirsToCheck as $dir) {
+      if ($fs->exists($dir)) {
+
+        $finder = new Finder();
+
+        // Symlink wp-vendor and wp-custom directories into WordPress.
+        foreach ($finder->in($dir)->depth('== 0')->directories()
+          as $path) {
+
+          // $fs->readlink($path);
+          // $event->getIO()->write("$path");
+        }
+
+        // Symlink single PHP files, too. When not inside one of the folders
+        // from above.
+        foreach ($finder->in($dir)->depth('== 0')->files()->name('*.php')
+          as $path) {
+
+          // $fs->readlink($path);
+          // $event->getIO()->write("$path");
+        }
+      }
+    }
+  }
 
 }

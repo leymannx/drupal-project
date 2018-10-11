@@ -57,11 +57,13 @@
     "scripts": {
         "post-install-cmd": [
             "WordpressProject\\composer\\ScriptHandler::CreateRequiredFiles",
-            "WordpressProject\\composer\\ScriptHandler::CreateSymlinks"
+            "WordpressProject\\composer\\ScriptHandler::CreateSymlinks",
+            "WordpressProject\\composer\\ScriptHandler::removeBrokenSymlinks"
         ],
         "post-update-cmd": [
             "WordpressProject\\composer\\ScriptHandler::CreateRequiredFiles",
-            "WordpressProject\\composer\\ScriptHandler::CreateSymlinks"
+            "WordpressProject\\composer\\ScriptHandler::CreateSymlinks",
+            "WordpressProject\\composer\\ScriptHandler::removeBrokenSymlinks"
         ]
     }
 }
