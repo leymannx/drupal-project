@@ -6,6 +6,8 @@
 
 namespace WordpressProject\composer;
 
+require_once __DIR__.'/../../vendor/autoload.php';
+
 use Composer\Script\Event;
 use WordpressFinder\WordpressFinder;
 use Symfony\Component\Filesystem\Filesystem;
