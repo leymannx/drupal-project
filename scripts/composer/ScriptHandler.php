@@ -6,7 +6,7 @@
 
 namespace WordpressProject\composer;
 
-require_once __DIR__.'/../../vendor/autoload.php';
+require_once __DIR__ . '/../../vendor/autoload.php';
 
 use Composer\Script\Event;
 use WordpressFinder\WordpressFinder;
@@ -32,18 +32,20 @@ class ScriptHandler {
     // Create folders for custom plugins and themes.
     foreach ($dirs as $dir) {
       if (!$fs->exists($composerRoot . '/wp-custom/' . $dir)) {
+
         $fs->mkdir($composerRoot . '/wp-custom/' . $dir);
         $fs->touch($composerRoot . '/wp-custom/' . $dir . '/.gitkeep');
         $event->getIO()
-          ->write("Created " . $composerRoot . "/" . $dir . " directory");
+          ->write("  *  Created $composerRoot/$dir directory");
       }
     }
 
-    // Create the upload directory with chmod 0777.
+    // Create the uploads directory with chmod 0777.
     if (!$fs->exists($composerRoot . '/uploads')) {
+
       $fs->mkdir($composerRoot . '/uploads', 0777);
       $event->getIO()
-        ->write("Created " . $composerRoot . "/uploads directory with chmod 0777");
+        ->write("  *  Created $composerRoot/uploads directory with chmod 0777");
     }
   }
 
@@ -89,7 +91,7 @@ class ScriptHandler {
 
             $fs->symlink($path, $webRoot . '/wp-content/' . $type . '/' . $name);
             $event->getIO()
-              ->write("Symlinked $path to $webRoot/wp-content/$type/$name");
+              ->write("  *  Symlinked $path to $webRoot/wp-content/$type/$name");
           }
         }
 
@@ -104,19 +106,10 @@ class ScriptHandler {
 
             $fs->symlink($path, $webRoot . '/wp-content/' . $type . '/' . $name);
             $event->getIO()
-              ->write("Symlinked $path to $webRoot/wp-content/$type/$name");
+              ->write("  *  Symlinked $path to $webRoot/wp-content/$type/$name");
           }
         }
       }
-    }
-
-    // Symlink wp-config/wp-config.php into webroot.
-    if ($fs->exists($composerRoot . '/wp-config/wp-config.php')
-      && !$fs->exists($webRoot . '/wp-config.php')) {
-
-      $fs->symlink($composerRoot . '/wp-config/wp-config.php', $webRoot . '/wp-config.php');
-      $event->getIO()
-        ->write("Symlinked $composerRoot/wp-config/wp-config.php to $webRoot/wp-config.php");
     }
 
     // Symlink uploads folder into web/wp-content/uploads.
@@ -125,7 +118,16 @@ class ScriptHandler {
 
       $fs->symlink($composerRoot . '/uploads', $webRoot . '/wp-content/uploads');
       $event->getIO()
-        ->write("Symlinked $composerRoot/uploads to $webRoot/wp-content/uploads");
+        ->write("  *  Symlinked $composerRoot/uploads to $webRoot/wp-content/uploads");
+    }
+
+    // Symlink wp-config/wp-config.php into webroot.
+    if ($fs->exists($composerRoot . '/wp-config/wp-config.php')
+      && !$fs->exists($webRoot . '/wp-config.php')) {
+
+      $fs->symlink($composerRoot . '/wp-config/wp-config.php', $webRoot . '/wp-config.php');
+      $event->getIO()
+        ->write("  *  Symlinked $composerRoot/wp-config/wp-config.php to $webRoot/wp-config.php");
     }
   }
 
