@@ -144,12 +144,6 @@ class ScriptHandler {
 
     $fs = new Filesystem();
 
-    // $event->getIO()->write(get_class_methods($fs));
-    $a = new \ReflectionClass($fs);
-    $event->getIO()->write($a->getFileName());
-    $b = new \ReflectionClass($wordpressFinder);
-    $event->getIO()->write($b->getFileName());
-
     foreach ($dirsToCheck as $dir) {
       if ($fs->exists($dir)) {
 
@@ -159,16 +153,26 @@ class ScriptHandler {
         foreach ($finder->in($dir)->depth('== 0')->directories()
           as $path) {
 
-          // $fs->readlink($path);
-          // $event->getIO()->write("$path");
+          if ($link = $fs->readlink($path)) {
+            if (!$fs->exists($link)) {
+
+              $fs->remove([$path]);
+              $event->getIO()->write("  *  Removed broken symlink: $path");
+            }
+          }
         }
 
         // Remove broken web/wp-content single PHP file symlinks.
         foreach ($finder->in($dir)->depth('== 0')->files()->name('*.php')
           as $path) {
 
-          // $fs->readlink($path);
-          // $event->getIO()->write("$path");
+          if ($link = $fs->readlink($path)) {
+            if (!$fs->exists($link)) {
+
+              $fs->remove([$path]);
+              $event->getIO()->write("  *  Removed broken symlink: $path");
+            }
+          }
         }
       }
     }
