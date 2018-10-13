@@ -17,8 +17,6 @@ Optionally:
 * After successful installation move `some-dir/web/wp-config.php` into `some-dir/wp-config/wp-config.php` and run `composer install` once again.
 * Install [`leymannx/wp-cli-launcher`][1] to let the `wp` command use this project's `some-dir/bin/wp` from any location inside the project.
 
-[1]: https://github.com/leymannx/wp-cli-launcher
-
 ### Custom plugins and themes
 
 Custom stuff all goes inside `some-dir/wp-custom`. There are subfolders for themes and plugins. They will get symlinked automatically into the right location on every `composer install` run.
@@ -32,11 +30,17 @@ cd some-dir
 composer require wpackagist-plugin/wordpress-seo
 ```
 
+### Update WordPress, plugins and themes
+
+Managing your WordPress site with Composer means you also update it with Composer. And maybe use a plugin like [WP Update Settings][2] to disable backend notifications.
+
+```bash
+composer update --with-dependencies
+```
+
 ### Recommendations
 
-I strongly recommend to use [WP-CFM][2] to synchronize your WordPress configuration across all environments. After you activated the plugin you may want to have the config exported to/imported from `some-dir/wp-config/cfm`. So place the following code into a custom mu-plugin under `some-dir/wp-custom/mu-plugins/some-file.php` and run `composer install` once to have it symlinked into the right location. 
-
-[2]: https://wordpress.org/plugins/wp-cfm/
+I strongly recommend to use [WP-CFM][3] to synchronize your WordPress configuration across all environments. After you activated the plugin you may want to have the config exported to/imported from `some-dir/wp-config/cfm`. So place the following code into a custom mu-plugin under `some-dir/wp-custom/mu-plugins/some-file.php` and run `composer install` once to have it symlinked into the right location. 
 
 ```php
 <?php
@@ -74,8 +78,11 @@ Why Composer at all? Because it sucks to have the whole monolithic codebase of W
 
 ### Credits
 
-* [drupal-composer/drupal-project][3]
-* [wodby/wordpress-composer][4]
+* [drupal-composer/drupal-project][4]
+* [wodby/wordpress-composer][5]
 
-[3]: https://github.com/drupal-composer/drupal-project
-[4]: https://github.com/wodby/wordpress-composer
+[1]: https://github.com/leymannx/wp-cli-launcher
+[2]: https://wordpress.org/plugins/wp-updates-settings/
+[3]: https://wordpress.org/plugins/wp-cfm/
+[4]: https://github.com/drupal-composer/drupal-project
+[5]: https://github.com/wodby/wordpress-composer
