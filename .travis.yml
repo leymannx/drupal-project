@@ -1,0 +1,25 @@
+language: php
+
+php:
+  - 5.6
+  - 7.0
+  - 7.1
+  - 7.2
+
+addons:
+  hosts:
+    - wordpress-project.localhost
+
+mysql:
+  database: travis_test
+  username: root
+  encoding: utf8
+
+install:
+  - composer install
+  - export PATH="$TRAVIS_BUILD_DIR/vendor/bin:$PATH"
+
+script:
+  - cd $TRAVIS_BUILD_DIR/web
+  - wp config create --dbname=travis_test --dbuser=root --dbpass="" --dbhost=127.0.0.1
+  - wp core install --url=wordpress-project.localhost --title="Composer Template for WordPress Projects" --admin_user=admin --admin_password=admin --admin_email=admin@wordpress-project.localhost
