@@ -20,9 +20,8 @@ before_install:
 
 install:
   - composer install
-  - export PATH="$TRAVIS_BUILD_DIR/vendor/bin:$PATH"
 
 script:
   - cd $TRAVIS_BUILD_DIR/web
-  - wp config create --dbname=travis_test --dbuser=root --dbpass="" --dbhost=127.0.0.1
-  - wp core install --url=wordpress-project.localhost --title="Composer Template for WordPress Projects" --admin_user=admin --admin_password=admin --admin_email=admin@wordpress-project.localhost
+  - ./../bin/wp config create --dbname=travis_test --dbuser=root --dbpass="" --dbhost=127.0.0.1
+  - ./../bin/wp core install --url=wordpress-project.localhost --title="Composer Template for WordPress Projects" --admin_user=admin --admin_password=admin --admin_email=admin@wordpress-project.localhost
