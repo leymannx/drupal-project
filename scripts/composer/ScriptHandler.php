@@ -43,9 +43,9 @@ class ScriptHandler {
     // Create the uploads directory with chmod 0777.
     if (!$fs->exists($composerRoot . '/uploads')) {
 
-      $fs->mkdir($composerRoot . '/uploads', 0777);
+      $fs->mkdir($composerRoot . '/uploads', 0755);
       $event->getIO()
-        ->write("  *  Created $composerRoot/uploads directory with chmod 0777");
+        ->write("  *  Created $composerRoot/uploads directory with chmod 0755");
     }
   }
 
