@@ -22,7 +22,7 @@
         "bin-dir": "bin/"
     },
     "require": {
-        "johnpbloch/wordpress-core": "~4.9",
+        "johnpbloch/wordpress-core": "^5.0",
         "leymannx/wordpress-finder": "^0.0.14",
         "oomphinc/composer-installers-extender": "^1.1",
         "symfony/filesystem": "^3.4 || ^4.1",
