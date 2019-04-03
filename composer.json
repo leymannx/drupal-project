@@ -27,6 +27,7 @@
         "oomphinc/composer-installers-extender": "^1.1",
         "symfony/filesystem": "^3.4 || ^4.1",
         "symfony/finder": "^3.4 || ^4.1",
+        "vlucas/phpdotenv": "^3.3",
         "wp-cli/wp-cli-bundle": "^2.0"
     },
     "require-dev": {
@@ -60,12 +61,14 @@
         "post-install-cmd": [
             "WordpressProject\\composer\\ScriptHandler::CreateRequiredFiles",
             "WordpressProject\\composer\\ScriptHandler::CreateSymlinks",
-            "WordpressProject\\composer\\ScriptHandler::removeBrokenSymlinks"
+            "WordpressProject\\composer\\ScriptHandler::RemoveBrokenSymlinks",
+            "WordpressProject\\composer\\ScriptHandler::SymlinkHtaccess",
         ],
         "post-update-cmd": [
             "WordpressProject\\composer\\ScriptHandler::CreateRequiredFiles",
             "WordpressProject\\composer\\ScriptHandler::CreateSymlinks",
-            "WordpressProject\\composer\\ScriptHandler::removeBrokenSymlinks"
+            "WordpressProject\\composer\\ScriptHandler::RemoveBrokenSymlinks",
+            "WordpressProject\\composer\\ScriptHandler::SymlinkHtaccess",
         ]
     }
 }

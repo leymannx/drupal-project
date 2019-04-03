@@ -9,6 +9,7 @@ namespace WordpressProject\composer;
 require_once __DIR__ . '/../../vendor/autoload.php';
 
 use Composer\Script\Event;
+use Dotenv\Dotenv;
 use WordpressFinder\WordpressFinder;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Finder\Finder;
@@ -176,6 +177,34 @@ class ScriptHandler {
             }
           }
         }
+      }
+    }
+  }
+
+  public static function SymlinkHtaccess(Event $event) {
+
+    $fs = new Filesystem();
+
+    $wordpressFinder = new WordpressFinder();
+    $wordpressFinder->locateRoot(getcwd());
+
+    $webRoot = $wordpressFinder->getWebRoot();
+    $composerRoot = $wordpressFinder->getComposerRoot();
+
+    if (!$fs->exists($webRoot . '/.htaccess')) {
+
+      $env_file = '.env.example';
+      if ($fs->exists($composerRoot . '/.env')) {
+        $env_file = '.env';
+      }
+
+      $dotenv = Dotenv::create($composerRoot, $env_file);
+      $dotenv->load();
+
+      if ($environment = getenv('WP_PROJECT_ENVIRONMENT')) {
+        $fs->symlink($composerRoot . '/wp-config/' . $environment . '.htaccess', $webRoot . '/.htaccess');
+        $event->getIO()
+          ->write("  *  Symlinked $composerRoot/wp-config/$environment.htaccess to $webRoot/.htaccess");
       }
     }
   }
