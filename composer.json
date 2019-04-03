@@ -62,13 +62,13 @@
             "WordpressProject\\composer\\ScriptHandler::CreateRequiredFiles",
             "WordpressProject\\composer\\ScriptHandler::CreateSymlinks",
             "WordpressProject\\composer\\ScriptHandler::RemoveBrokenSymlinks",
-            "WordpressProject\\composer\\ScriptHandler::SymlinkHtaccess",
+            "WordpressProject\\composer\\ScriptHandler::SymlinkHtaccess"
         ],
         "post-update-cmd": [
             "WordpressProject\\composer\\ScriptHandler::CreateRequiredFiles",
             "WordpressProject\\composer\\ScriptHandler::CreateSymlinks",
             "WordpressProject\\composer\\ScriptHandler::RemoveBrokenSymlinks",
-            "WordpressProject\\composer\\ScriptHandler::SymlinkHtaccess",
+            "WordpressProject\\composer\\ScriptHandler::SymlinkHtaccess"
         ]
     }
 }
