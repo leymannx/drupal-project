@@ -19,7 +19,10 @@
     "prefer-stable": true,
     "config": {
         "sort-packages": true,
-        "bin-dir": "bin/"
+        "bin-dir": "bin/",
+        "platform": {
+            "php": ">=7.1"
+        }
     },
     "require": {
         "johnpbloch/wordpress-core": "^5.0",
